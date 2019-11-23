@@ -45,6 +45,6 @@ ext {
     espressoVersion = '3.2.0'
     fragmentVersion = '1.2.0-rc02'
     junitVersion = '4.12'
-    materialVersion = '1.0.0'
+    materialVersion = '1.1.0-beta02'
     navigationVersion = '2.1.0'
 }
