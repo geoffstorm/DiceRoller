@@ -10,4 +10,5 @@
     <string name="label_die_count">Number of Dice:</string>
     <string name="label_side_count">Number of Sides:</string>
     <string name="label_add_constant">Additional Constant:</string>
+    <string name="button_roll_dice">Roll Dice</string>
 </resources>
