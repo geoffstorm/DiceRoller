@@ -2,12 +2,12 @@
     <string name="app_name">Dice Roller</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="hello_home_second">Hello HomeSecondFragment. Arg: %1$s</string>
-    <string name="hello_dashboard_second">Hello HomeSecondFragment. Arg: %1$s</string>
-    <string name="hello_notifications_second">Hello HomeSecondFragment. Arg: %1$s</string>
     <string name="title_home">Home</string>
     <string name="title_favorites">Favorites</string>
     <string name="title_history">History</string>
-
-    <string name="home_second">Home Second</string>
+    
+    <!-- Home Fragment -->
+    <string name="label_die_count">Number of Dice:</string>
+    <string name="label_side_count">Number of Sides:</string>
+    <string name="label_add_constant">Additional Constant:</string>
 </resources>
