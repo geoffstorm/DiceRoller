@@ -76,8 +76,11 @@
             android:layout_marginStart="@dimen/spacing_medium"
             android:inputType="number"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textAlignment="center"
             android:maxLength="3"
-            android:importantForAutofill="no"/>
+            android:selectAllOnFocus="true"
+            android:importantForAutofill="no"
+            tools:text="10"/>
 
         <!-- TODO this should be an auto complete text view -->
         <EditText
@@ -90,8 +93,11 @@
             android:layout_marginStart="@dimen/spacing_medium"
             android:inputType="number"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textAlignment="center"
             android:maxLength="3"
-            android:importantForAutofill="no"/>
+            android:selectAllOnFocus="true"
+            android:importantForAutofill="no"
+            tools:text="6"/>
 
         <EditText
             android:id="@+id/ed_constant"
@@ -103,7 +109,10 @@
             android:layout_marginStart="@dimen/spacing_medium"
             android:inputType="number"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textAlignment="center"
             android:maxLength="3"
-            android:importantForAutofill="no"/>
+            android:selectAllOnFocus="true"
+            android:importantForAutofill="no"
+            tools:text="0"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
