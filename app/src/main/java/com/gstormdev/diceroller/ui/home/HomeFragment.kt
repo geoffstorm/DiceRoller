@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import com.gstormdev.diceroller.R
+import com.gstormdev.diceroller.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
@@ -23,13 +25,12 @@ class HomeFragment : Fragment() {
     ): View? {
         homeViewModel =
                 ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-        val rollResult:TextView = root.findViewById(R.id.tv_roll_result)
-        rollResult.movementMethod = ScrollingMovementMethod()
-//        val textView: TextView = root.findViewById(R.id.text_home)
-//        homeViewModel.text.observe(viewLifecycleOwner, Observer {
-//            textView.text = it
-//        })
-        return root
+
+        val binding: FragmentHomeBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
+        binding.viewmodel = homeViewModel
+        binding.lifecycleOwner = this
+        binding.tvRollResult.movementMethod = ScrollingMovementMethod()
+
+        return binding.root
     }
 }
