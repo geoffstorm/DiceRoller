@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="viewmodel"
+            type="com.gstormdev.diceroller.ui.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -100,6 +102,7 @@
                 android:textAlignment="center"
                 android:maxLength="3"
                 android:selectAllOnFocus="true"
+                android:text="@={`` + viewmodel.numberOfDice}"
                 tools:text="10"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -121,6 +124,7 @@
                 android:textAlignment="center"
                 android:maxLength="3"
                 android:selectAllOnFocus="true"
+                android:text="@={`` + viewmodel.numberOfSides}"
                 tools:text="6"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -142,6 +146,7 @@
                 android:textAlignment="center"
                 android:maxLength="3"
                 android:selectAllOnFocus="true"
+                android:text="@={`` + viewmodel.constant}"
                 tools:text="0"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -172,6 +177,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="@dimen/spacing_large"
             android:layout_marginEnd="@dimen/spacing_large"
-            android:text="@string/button_roll_dice"/>
+            android:text="@string/button_roll_dice"
+            android:onClick="@{() -> viewmodel.rollDice()}"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
