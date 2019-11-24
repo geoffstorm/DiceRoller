@@ -28,18 +28,18 @@ class DiceNotationCombinedLiveData(diceSource: LiveData<Int>, sidesSource: LiveD
     }
 
     private fun buildDiceNotation(): String {
+        val numberOfDice = this.numberOfDice ?: 0
+        val numberOfSides = this.numberOfSides ?: 0
+        val constant = this.constant ?: 0
+
         var notation: String = ""
-        numberOfDice?.let {
-            if (it > 0) {
-                notation += it
-            }
+
+        if (numberOfDice > 0) {
+            notation += numberOfDice
         }
-        notation += "d"
-        numberOfSides?.let { notation += it }
-        constant?.let {
-            if (it > 0) {
-                notation += "+$it"
-            }
+        notation += "d$numberOfSides"
+        if (constant > 0) {
+            notation += "+$constant"
         }
         return notation
     }
