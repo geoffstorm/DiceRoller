@@ -32,7 +32,7 @@ class DiceNotationCombinedLiveData(diceSource: LiveData<Int>, sidesSource: LiveD
         val numberOfSides = this.numberOfSides ?: 0
         val constant = this.constant ?: 0
 
-        var notation: String = ""
+        var notation = ""
 
         if (numberOfDice > 0) {
             notation += numberOfDice
