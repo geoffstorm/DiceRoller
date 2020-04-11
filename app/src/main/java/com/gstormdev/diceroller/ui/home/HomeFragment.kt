@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.gstormdev.diceroller.R
 import com.gstormdev.diceroller.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
-    private val homeViewModel by lazy { ViewModelProviders.of(this).get(HomeViewModel::class.java) }
+    private val homeViewModel by lazy { ViewModelProvider(this).get(HomeViewModel::class.java) }
 
     override fun onCreateView(
             inflater: LayoutInflater,
