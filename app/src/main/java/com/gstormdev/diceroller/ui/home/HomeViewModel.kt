@@ -1,13 +1,10 @@
 package com.gstormdev.diceroller.ui.home
 
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gstormdev.diceroller.interfaces.DieRoller
 import com.gstormdev.diceroller.interfaces.RollResult
 import com.gstormdev.diceroller.util.DiceNotationCombinedLiveData
-import com.gstormdev.diceroller.util.hideKeyboard
 
 class HomeViewModel(private var dieRoller: DieRoller) : ViewModel() {
 
