@@ -1,13 +1,15 @@
 package com.gstormdev.diceroller.ui.home
 
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gstormdev.diceroller.interfaces.DieRoller
-import com.gstormdev.diceroller.services.StandardDieRoller
+import com.gstormdev.diceroller.interfaces.RollResult
 import com.gstormdev.diceroller.util.DiceNotationCombinedLiveData
+import com.gstormdev.diceroller.util.hideKeyboard
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private var dieRoller: DieRoller) : ViewModel() {
 
     val numberOfDice = MutableLiveData(1)
     val numberOfSides = MutableLiveData(6)
@@ -15,10 +17,9 @@ class HomeViewModel : ViewModel() {
 
     val diceNotation = DiceNotationCombinedLiveData(numberOfDice, numberOfSides, constant)
 
-    val dieRoller: DieRoller by lazy { StandardDieRoller() }
+    val result = MutableLiveData<RollResult>()
 
     fun rollDice() {
-        Log.e("HomeViewModel", "${numberOfDice.value}d${numberOfSides.value}+${constant.value}")
-        val result = dieRoller.rollDie(numberOfDice.value ?: 0, numberOfSides.value ?: 0, constant.value ?: 0)
+        result.value = dieRoller.rollDie(numberOfDice.value ?: 0, numberOfSides.value ?: 0, constant.value ?: 0)
     }
 }
