@@ -22,7 +22,7 @@ class HistoryFragment : Fragment() {
         historyViewModel =
                 ViewModelProvider(this).get(HistoryViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_history, container, false)
-        val textView: TextView = root.findViewById(R.id.text_history)
+        val textView: TextView = root.findViewById(R.id.textHistory)
         historyViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })

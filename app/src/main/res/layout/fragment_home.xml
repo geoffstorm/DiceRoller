@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.gstormdev.diceroller.util.Converter"/>
         <variable
             name="viewmodel"
             type="com.gstormdev.diceroller.ui.home.HomeViewModel" />
@@ -19,7 +20,7 @@
         tools:context=".ui.home.HomeFragment">
         
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -32,13 +33,13 @@
             tools:text="10d6"/>
 
         <TextView
-            android:id="@+id/tv_die_count"
+            android:id="@+id/tvDieCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/spacing_medium"
             android:layout_marginEnd="@dimen/spacing_medium"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            app:layout_constraintBottom_toTopOf="@id/tv_side_count"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintBottom_toTopOf="@id/tvSideCount"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_max="wrap"
             app:layout_constraintWidth_percent="0.5"
@@ -46,57 +47,57 @@
             app:layout_constraintVertical_bias="0.15"
             android:text="@string/label_die_count"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:labelFor="@id/ed_die_count"/>
+            android:labelFor="@id/edDieCount"/>
 
         <TextView
-            android:id="@+id/tv_side_count"
+            android:id="@+id/tvSideCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
             android:layout_marginBottom="@dimen/spacing_medium"
             android:layout_marginEnd="@dimen/spacing_medium"
-            app:layout_constraintTop_toBottomOf="@id/tv_die_count"
-            app:layout_constraintBottom_toTopOf="@id/tv_constant"
+            app:layout_constraintTop_toBottomOf="@id/tvDieCount"
+            app:layout_constraintBottom_toTopOf="@id/tvConstant"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_max="wrap"
             app:layout_constraintWidth_percent="0.5"
             android:text="@string/label_side_count"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:labelFor="@id/ed_side_count"/>
+            android:labelFor="@id/edSideCount"/>
 
         <TextView
-            android:id="@+id/tv_constant"
+            android:id="@+id/tvConstant"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
             android:layout_marginEnd="@dimen/spacing_medium"
-            app:layout_constraintTop_toBottomOf="@id/tv_side_count"
-            app:layout_constraintBottom_toTopOf="@id/btn_roll"
+            app:layout_constraintTop_toBottomOf="@id/tvSideCount"
+            app:layout_constraintBottom_toTopOf="@id/btnRoll"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintWidth_max="wrap"
             app:layout_constraintWidth_percent="0.5"
             android:text="@string/label_add_constant"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:labelFor="@id/ed_constant"/>
+            android:labelFor="@id/edConstant"/>
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="end"
-            app:constraint_referenced_ids="tv_constant,tv_die_count,tv_side_count"/>
+            app:constraint_referenced_ids="tvConstant,tvDieCount,tvSideCount" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_die_count"
+            android:id="@+id/tilDieCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/barrier"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_die_count"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvDieCount"
             android:layout_marginStart="@dimen/spacing_medium">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_die_count"
+                android:id="@+id/edDieCount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
@@ -104,21 +105,21 @@
                 android:textAlignment="center"
                 android:maxLength="3"
                 android:selectAllOnFocus="true"
-                android:text="@={`` + viewmodel.numberOfDice}"
+                android:text="@={Converter.intToString(edDieCount, viewmodel.numberOfDice)}"
                 tools:text="10"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_side_count"
+            android:id="@+id/tilSideCount"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/barrier"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_side_count"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvSideCount"
             android:layout_marginStart="@dimen/spacing_medium">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_side_count"
+                android:id="@+id/edSideCount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
@@ -126,21 +127,21 @@
                 android:textAlignment="center"
                 android:maxLength="3"
                 android:selectAllOnFocus="true"
-                android:text="@={`` + viewmodel.numberOfSides}"
+                android:text="@={Converter.intToString(edSideCount, viewmodel.numberOfSides)}"
                 tools:text="6"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_constant"
+            android:id="@+id/tilConstant"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toEndOf="@id/barrier"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_constant"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvConstant"
             android:layout_marginStart="@dimen/spacing_medium">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/ed_constant"
+                android:id="@+id/edConstant"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
@@ -148,17 +149,17 @@
                 android:textAlignment="center"
                 android:maxLength="3"
                 android:selectAllOnFocus="true"
-                android:text="@={`` + viewmodel.constant}"
+                android:text="@={Converter.intToString(edConstant, viewmodel.constant)}"
                 tools:text="0"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/tv_roll_total"
+            android:id="@+id/tvRollTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintTop_toBottomOf="@id/til_constant"
-            app:layout_constraintBottom_toTopOf="@id/tv_roll_list"
+            app:layout_constraintTop_toBottomOf="@id/tilConstant"
+            app:layout_constraintBottom_toTopOf="@id/tvRollList"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="@dimen/spacing_large"
@@ -169,12 +170,12 @@
             tools:text="Total: 17"/>
 
         <TextView
-            android:id="@+id/tv_roll_list"
+            android:id="@+id/tvRollList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constrainedHeight="true"
-            app:layout_constraintTop_toBottomOf="@id/tv_roll_total"
-            app:layout_constraintBottom_toTopOf="@id/btn_roll"
+            app:layout_constraintTop_toBottomOf="@id/tvRollTotal"
+            app:layout_constraintBottom_toTopOf="@id/btnRoll"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="@dimen/spacing_large"
@@ -188,7 +189,7 @@
             tools:text="(1, 2, 3, 4, 5, 6)"/>
 
         <Button
-            android:id="@+id/btn_roll"
+            android:id="@+id/btnRoll"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
