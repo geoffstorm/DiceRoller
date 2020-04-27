@@ -5,7 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import java.lang.UnsupportedOperationException
 
-class DiceNotationCombinedLiveData(diceSource: LiveData<Int>, sidesSource: LiveData<Int>, constantSource: LiveData<Int>): MediatorLiveData<String>() {
+class DiceNotationCombinedLiveData(diceSource: LiveData<Int?>, sidesSource: LiveData<Int?>, constantSource: LiveData<Int?>): MediatorLiveData<String>() {
     private var numberOfDice: Int? = null
     private var numberOfSides: Int? = null
     private var constant: Int? = null
