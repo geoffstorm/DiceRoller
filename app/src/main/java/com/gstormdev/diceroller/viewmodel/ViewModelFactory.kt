@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.gstormdev.diceroller.db.AppDatabase
 import com.gstormdev.diceroller.db.repository.RollHistoryRepository
 import com.gstormdev.diceroller.services.StandardDieRoller
+import com.gstormdev.diceroller.ui.history.HistoryViewModel
 import com.gstormdev.diceroller.ui.home.HomeViewModel
 
 @Suppress("UNCHECKED_CAST")
@@ -15,6 +16,9 @@ class ViewModelFactory(private val applicationContext: Context): ViewModelProvid
             isAssignableFrom(HomeViewModel::class.java) -> {
                 HomeViewModel(StandardDieRoller(),
                         RollHistoryRepository(AppDatabase.getDatabase(applicationContext).rollHistoryDao()))
+            }
+            isAssignableFrom(HistoryViewModel::class.java) -> {
+                HistoryViewModel(RollHistoryRepository(AppDatabase.getDatabase(applicationContext).rollHistoryDao()))
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
