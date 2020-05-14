@@ -19,7 +19,7 @@ fun hideIfZero(view: View, number: Int) {
 }
 
 @BindingAdapter("app:hideIfNull")
-fun <T> hideIfNull(view: View, obj: Any?) {
+fun hideIfNull(view: View, obj: Any?) {
     view.visibility = if (obj == null) View.GONE else View.VISIBLE
 }
 
