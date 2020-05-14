@@ -20,20 +20,27 @@ class HistoryFragment : Fragment() {
     private val historyViewModel by lazy { ViewModelProvider(this, viewModelFactory).get(HistoryViewModel::class.java) }
     private val historyAdapter = HistoryAdapter(this)
 
+    private lateinit var binding: FragmentHistoryBinding
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        val binding: FragmentHistoryBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_history, container, false)
-        binding.lifecycleOwner = this
+        binding = FragmentHistoryBinding.inflate(inflater, container, false)
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.adapter = historyAdapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         historyViewModel.rolls.observe(viewLifecycleOwner, Observer {
             historyAdapter.setData(it)
+            updateEmptyState(it.isEmpty())
         })
         return binding.root
+    }
+
+    private fun updateEmptyState(isEmpty: Boolean) {
+        binding.recyclerView.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        binding.emptyView.visibility = if (isEmpty) View.VISIBLE else View.GONE
     }
 }
