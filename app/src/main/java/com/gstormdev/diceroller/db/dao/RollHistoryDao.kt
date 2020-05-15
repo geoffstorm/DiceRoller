@@ -10,7 +10,7 @@ import com.gstormdev.diceroller.db.entity.RollHistory
 @Dao
 interface RollHistoryDao {
 
-    @Query("SELECT * FROM rollhistory")
+    @Query("SELECT * FROM rollhistory ORDER BY rollDateTime DESC")
     fun getAll(): LiveData<List<RollHistory>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

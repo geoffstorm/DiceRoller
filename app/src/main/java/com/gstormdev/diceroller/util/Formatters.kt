@@ -8,7 +8,7 @@ object Formatters {
     fun diceNotationFormatter(numberOfDice: Int, numberOfSides: Int, constant: Int): String {
         var notation = ""
 
-        if (numberOfDice > 0) {
+        if (numberOfDice >= 0) {
             notation += numberOfDice
         }
         notation += "d$numberOfSides"
