@@ -1,12 +1,13 @@
 package com.gstormdev.diceroller.ui.history
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.Transformation
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gstormdev.diceroller.R
@@ -30,6 +31,63 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         holder.bind(rolls[position])
+        holder.binding.ivCollapse.setOnClickListener {
+            holder.binding.model?.toggleExpanded()
+            val currentlyExpanded = holder.binding.model?.isExpanded ?: false
+            holder.binding.ivCollapse.setImageResource(if (currentlyExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more)
+            if (currentlyExpanded) {
+                expand(holder.binding.layoutRow, holder.binding.expandableContent)
+            } else {
+                collapse(holder.binding.expandableContent)
+            }
+        }
+    }
+
+    private fun expand(container: View, expandable: View) {
+        val widthSpec = View.MeasureSpec.makeMeasureSpec(container.width, View.MeasureSpec.EXACTLY)
+        val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        expandable.measure(widthSpec, heightSpec)
+        val targetHeight = expandable.measuredHeight
+        val animation = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+                expandable.layoutParams.height = if (interpolatedTime == 1f) {
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                } else {
+                    (targetHeight * interpolatedTime).toInt()
+                }
+                expandable.requestLayout()
+            }
+
+            override fun willChangeBounds() = true
+        }
+        animation.duration = 250
+        animation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation?) {
+                expandable.isVisible = true
+            }
+
+            override fun onAnimationEnd(animation: Animation?) { }
+            override fun onAnimationRepeat(animation: Animation?) { }
+        })
+        expandable.startAnimation(animation)
+    }
+
+    private fun collapse(collapsible: View) {
+        val initialHeight = collapsible.measuredHeight
+        val animation = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+                if (interpolatedTime == 1f) {
+                    collapsible.isVisible = false
+                } else {
+                    collapsible.layoutParams.height = initialHeight - (initialHeight * interpolatedTime).toInt()
+                    collapsible.requestLayout()
+                }
+            }
+
+            override fun willChangeBounds() = true
+        }
+        animation.duration = 200
+        collapsible.startAnimation(animation)
     }
 
     fun setData(history: List<RollHistory>) {
@@ -40,7 +98,7 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
     }
 }
 
-class HistoryViewHolder(private val binding: RowRollHistoryBinding): RecyclerView.ViewHolder(binding.root) {
+class HistoryViewHolder(val binding: RowRollHistoryBinding): RecyclerView.ViewHolder(binding.root) {
     fun bind(model: RollHistoryItem) {
         binding.model = model
         binding.executePendingBindings()
@@ -69,11 +127,7 @@ class RollHistoryDiffCallback(private val newData: List<RollHistoryItem>, privat
 }
 
 class RollHistoryItem(val rollHistory: RollHistory) {
-    private val _isExpanded = MutableLiveData(false)
-    val isExpanded: LiveData<Boolean> = _isExpanded
-    val expandCollapseDrawable: LiveData<Int> = Transformations.map(isExpanded) { expanded ->
-        if (expanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more
-    }
+    var isExpanded = false
 
     fun getRollTotal(): String {
         return rollHistory.rollResult.result.toString()
@@ -93,6 +147,6 @@ class RollHistoryItem(val rollHistory: RollHistory) {
     }
 
     fun toggleExpanded() {
-        _isExpanded.value = !(_isExpanded.value ?: false)
+       isExpanded = !isExpanded
     }
 }
