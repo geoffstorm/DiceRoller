@@ -7,6 +7,7 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -31,10 +32,12 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         holder.bind(rolls[position])
+        // TODO move this listener to the bind method?
+        // TODO need to reset the expand/collapse state of the view (currently expanding the top view expands the bottom as well)
         holder.binding.ivCollapse.setOnClickListener {
             holder.binding.model?.toggleExpanded()
             val currentlyExpanded = holder.binding.model?.isExpanded ?: false
-            holder.binding.ivCollapse.setImageResource(if (currentlyExpanded) R.drawable.ic_expand_less else R.drawable.ic_expand_more)
+            rotate180(holder.binding.ivCollapse, currentlyExpanded)
             if (currentlyExpanded) {
                 expand(holder.binding.layoutRow, holder.binding.expandableContent)
             } else {
@@ -43,6 +46,7 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
         }
     }
 
+    // TODO try using a ValueAnimator as well, for funsies
     private fun expand(container: View, expandable: View) {
         val widthSpec = View.MeasureSpec.makeMeasureSpec(container.width, View.MeasureSpec.EXACTLY)
         val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
@@ -69,6 +73,7 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
             override fun onAnimationEnd(animation: Animation?) { }
             override fun onAnimationRepeat(animation: Animation?) { }
         })
+        animation.interpolator = FastOutSlowInInterpolator()
         expandable.startAnimation(animation)
     }
 
@@ -87,7 +92,23 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
             override fun willChangeBounds() = true
         }
         animation.duration = 200
+        animation.interpolator = FastOutSlowInInterpolator()
         collapsible.startAnimation(animation)
+    }
+
+    private fun rotate180(view: View, clockwise: Boolean) {
+        val initialRotation = view.rotation
+        val rotationAngle = if (clockwise) 180f else -180f
+        val animation = object : Animation() {
+            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
+                view.rotation = initialRotation + (rotationAngle * interpolatedTime)
+            }
+
+            override fun willChangeBounds() = false
+        }
+        animation.duration = if (clockwise) 250 else 200
+        animation.interpolator = FastOutSlowInInterpolator()
+        view.startAnimation(animation)
     }
 
     fun setData(history: List<RollHistory>) {
