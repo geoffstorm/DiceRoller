@@ -15,4 +15,5 @@
 
     <!-- History Fragment -->
     <string name="content_description_expand_collapse">Expand Collapse</string>
+    <string name="empty_roll_history">There\'s no history to display</string>
 </resources>

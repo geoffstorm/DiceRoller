@@ -5,18 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.history.HistoryFragment">
 
-    <!-- TODO Proper empty view -->
     <TextView
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/spacing_large"
         android:gravity="center"
-        android:text="EMPTY VIEW"
+        android:text="@string/empty_roll_history"
         android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"/>
 </FrameLayout>

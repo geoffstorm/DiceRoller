@@ -1,20 +1,17 @@
 package com.gstormdev.diceroller.ui.history
 
-import android.animation.ValueAnimator
+import android.animation.AnimatorSet
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.gstormdev.diceroller.R
 import com.gstormdev.diceroller.databinding.RowRollHistoryBinding
 import com.gstormdev.diceroller.db.entity.RollHistory
+import com.gstormdev.diceroller.util.AnimationUtil
 import com.gstormdev.diceroller.util.Formatters
 
 class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.Adapter<HistoryViewHolder>() {
@@ -33,67 +30,6 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
 
     override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
         holder.bind(rolls[position])
-        // TODO move this listener to the bind method?
-        // TODO need to reset the expand/collapse state of the view (currently expanding the top view expands the bottom as well)
-        holder.binding.ivCollapse.setOnClickListener {
-            holder.binding.model?.toggleExpanded()
-            val currentlyExpanded = holder.binding.model?.isExpanded ?: false
-            rotate180(holder.binding.ivCollapse, currentlyExpanded)
-            if (currentlyExpanded) {
-                expand(holder.binding.layoutRow, holder.binding.expandableContent)
-            } else {
-                collapse(holder.binding.expandableContent)
-            }
-        }
-    }
-
-    private fun expand(container: View, expandable: View) {
-        val widthSpec = View.MeasureSpec.makeMeasureSpec(container.width, View.MeasureSpec.EXACTLY)
-        val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-        expandable.measure(widthSpec, heightSpec)
-        val targetHeight = expandable.measuredHeight
-        val animation = ValueAnimator.ofInt(0, targetHeight).apply {
-            duration = 250
-            interpolator = FastOutSlowInInterpolator()
-            doOnStart { expandable.isVisible = true }
-            addUpdateListener { updatedAnimation ->
-                expandable.layoutParams.height = if (updatedAnimation.animatedFraction == 1f) {
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                } else {
-                    updatedAnimation.animatedValue as Int
-                }
-                expandable.requestLayout()
-            }
-        }
-        animation.start()
-    }
-
-    private fun collapse(collapsible: View) {
-        val initialHeight = collapsible.measuredHeight
-        val animation = ValueAnimator.ofInt(initialHeight, 0).apply {
-            duration = 200
-            interpolator = FastOutSlowInInterpolator()
-            doOnEnd { collapsible.isVisible = false }
-            addUpdateListener { updatedAnimation ->
-                collapsible.layoutParams.height = updatedAnimation.animatedValue as Int
-                collapsible.requestLayout()
-            }
-        }
-        animation.start()
-    }
-
-    private fun rotate180(view: View, clockwise: Boolean) {
-        val initialRotation = view.rotation
-        var rotationAngle = 180
-        if (!clockwise) rotationAngle *= -1
-        val animation = ValueAnimator.ofFloat(initialRotation, initialRotation + rotationAngle).apply {
-            duration = if (clockwise) 250 else 200
-            interpolator = FastOutSlowInInterpolator()
-            addUpdateListener { updatedAnimation ->
-                view.rotation = updatedAnimation.animatedValue as Float
-            }
-        }
-        animation.start()
     }
 
     fun setData(history: List<RollHistory>) {
@@ -104,10 +40,34 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
     }
 }
 
-class HistoryViewHolder(val binding: RowRollHistoryBinding): RecyclerView.ViewHolder(binding.root) {
+class HistoryViewHolder(private val binding: RowRollHistoryBinding): RecyclerView.ViewHolder(binding.root) {
     fun bind(model: RollHistoryItem) {
         binding.model = model
         binding.executePendingBindings()
+        setupViews()
+    }
+
+    private fun setupViews() {
+        binding.ivCollapse.setOnClickListener {
+            binding.model?.toggleExpanded()
+            val currentlyExpanded = binding.model?.isExpanded ?: false
+
+            val rotationAnimator = AnimationUtil.rotate180(binding.ivCollapse, currentlyExpanded)
+            val expansionAnimator = if (currentlyExpanded) {
+                AnimationUtil.expand(binding.layoutRow, binding.expandableContent)
+            } else {
+                AnimationUtil.collapse(binding.expandableContent)
+            }
+
+            AnimatorSet().apply {
+                duration = if (currentlyExpanded) AnimationUtil.ENTRANCE_DURATION else AnimationUtil.EXIT_DURATION
+                playTogether(expansionAnimator, rotationAnimator)
+            }.start()
+        }
+
+        val currentlyExpanded = binding.model?.isExpanded ?: false
+        binding.ivCollapse.rotation = if (currentlyExpanded) 180f else 0f
+        binding.expandableContent.isVisible = currentlyExpanded
     }
 }
 
