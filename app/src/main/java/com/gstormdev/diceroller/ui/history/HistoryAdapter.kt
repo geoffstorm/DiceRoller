@@ -1,10 +1,11 @@
 package com.gstormdev.diceroller.ui.history
 
+import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.Transformation
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -46,69 +47,53 @@ class HistoryAdapter(private val lifecycleOwner: LifecycleOwner): RecyclerView.A
         }
     }
 
-    // TODO try using a ValueAnimator as well, for funsies
     private fun expand(container: View, expandable: View) {
         val widthSpec = View.MeasureSpec.makeMeasureSpec(container.width, View.MeasureSpec.EXACTLY)
         val heightSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         expandable.measure(widthSpec, heightSpec)
         val targetHeight = expandable.measuredHeight
-        val animation = object : Animation() {
-            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-                expandable.layoutParams.height = if (interpolatedTime == 1f) {
+        val animation = ValueAnimator.ofInt(0, targetHeight).apply {
+            duration = 250
+            interpolator = FastOutSlowInInterpolator()
+            doOnStart { expandable.isVisible = true }
+            addUpdateListener { updatedAnimation ->
+                expandable.layoutParams.height = if (updatedAnimation.animatedFraction == 1f) {
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 } else {
-                    (targetHeight * interpolatedTime).toInt()
+                    updatedAnimation.animatedValue as Int
                 }
                 expandable.requestLayout()
             }
-
-            override fun willChangeBounds() = true
         }
-        animation.duration = 250
-        animation.setAnimationListener(object : Animation.AnimationListener {
-            override fun onAnimationStart(animation: Animation?) {
-                expandable.isVisible = true
-            }
-
-            override fun onAnimationEnd(animation: Animation?) { }
-            override fun onAnimationRepeat(animation: Animation?) { }
-        })
-        animation.interpolator = FastOutSlowInInterpolator()
-        expandable.startAnimation(animation)
+        animation.start()
     }
 
     private fun collapse(collapsible: View) {
         val initialHeight = collapsible.measuredHeight
-        val animation = object : Animation() {
-            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-                if (interpolatedTime == 1f) {
-                    collapsible.isVisible = false
-                } else {
-                    collapsible.layoutParams.height = initialHeight - (initialHeight * interpolatedTime).toInt()
-                    collapsible.requestLayout()
-                }
+        val animation = ValueAnimator.ofInt(initialHeight, 0).apply {
+            duration = 200
+            interpolator = FastOutSlowInInterpolator()
+            doOnEnd { collapsible.isVisible = false }
+            addUpdateListener { updatedAnimation ->
+                collapsible.layoutParams.height = updatedAnimation.animatedValue as Int
+                collapsible.requestLayout()
             }
-
-            override fun willChangeBounds() = true
         }
-        animation.duration = 200
-        animation.interpolator = FastOutSlowInInterpolator()
-        collapsible.startAnimation(animation)
+        animation.start()
     }
 
     private fun rotate180(view: View, clockwise: Boolean) {
         val initialRotation = view.rotation
-        val rotationAngle = if (clockwise) 180f else -180f
-        val animation = object : Animation() {
-            override fun applyTransformation(interpolatedTime: Float, t: Transformation?) {
-                view.rotation = initialRotation + (rotationAngle * interpolatedTime)
+        var rotationAngle = 180
+        if (!clockwise) rotationAngle *= -1
+        val animation = ValueAnimator.ofFloat(initialRotation, initialRotation + rotationAngle).apply {
+            duration = if (clockwise) 250 else 200
+            interpolator = FastOutSlowInInterpolator()
+            addUpdateListener { updatedAnimation ->
+                view.rotation = updatedAnimation.animatedValue as Float
             }
-
-            override fun willChangeBounds() = false
         }
-        animation.duration = if (clockwise) 250 else 200
-        animation.interpolator = FastOutSlowInInterpolator()
-        view.startAnimation(animation)
+        animation.start()
     }
 
     fun setData(history: List<RollHistory>) {
