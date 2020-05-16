@@ -1,13 +1,10 @@
 package com.gstormdev.diceroller.ui.history
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.gstormdev.diceroller.db.entity.RollHistory
+import com.gstormdev.diceroller.db.repository.RollHistoryRepository
 
-class HistoryViewModel : ViewModel() {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is history Fragment"
-    }
-    val text: LiveData<String> = _text
+class HistoryViewModel(rollHistoryRepository: RollHistoryRepository) : ViewModel() {
+    val rolls: LiveData<List<RollHistory>> = rollHistoryRepository.fetchRollHistory()
 }

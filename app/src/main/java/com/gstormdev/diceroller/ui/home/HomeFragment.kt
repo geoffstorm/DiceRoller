@@ -15,7 +15,7 @@ import com.gstormdev.diceroller.viewmodel.ViewModelFactory
 
 class HomeFragment : Fragment() {
 
-    private val viewModelFactory by lazy { ViewModelFactory() }
+    private val viewModelFactory by lazy { ViewModelFactory(this.requireContext().applicationContext) }
     private val homeViewModel by lazy { ViewModelProvider(this, viewModelFactory).get(HomeViewModel::class.java) }
 
     override fun onCreateView(

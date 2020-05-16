@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="model"
+            type="com.gstormdev.diceroller.ui.history.RollHistoryItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:listPreferredItemHeight"
+        android:padding="@dimen/spacing_medium">
+
+        <ImageView
+            android:id="@+id/ivCollapse"
+            android:layout_width="@dimen/list_icon_size"
+            android:layout_height="@dimen/list_icon_size"
+            android:contentDescription="@string/content_description_expand_collapse"
+            app:layout_constraintBottom_toBottomOf="@id/tvDiceNotation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvRollTotal"
+            android:src="@drawable/ic_expand_more"/>
+
+        <TextView
+            android:id="@+id/tvRollTotal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_constraintEnd_toStartOf="@id/ivCollapse"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@{model.rollTotal}"
+            tools:text="48" />
+
+        <TextView
+            android:id="@+id/tvDiceNotation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="?android:textColorSecondary"
+            app:layout_constraintEnd_toStartOf="@id/ivCollapse"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRollTotal"
+            android:text="@{model.diceNotation}"
+            tools:text="6d8+10" />
+
+        <LinearLayout
+            android:id="@+id/expandableContent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/tvDiceNotation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone">
+
+            <!--
+            This view is used as a margin to help with height calculations during the
+            expand/collapse animations, instead of using an actual margin
+            -->
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/spacing_medium"
+                android:importantForAccessibility="no" />
+
+            <TextView
+                android:id="@+id/tvDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                app:date="@{model.date}"
+                tools:text="Jan 1, 2001 12:00am"/>
+
+            <TextView
+                android:id="@+id/tvRollList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="@{model.rolls}"
+                tools:text="(1, 2, 3, 4, 5, 6)"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

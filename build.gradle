@@ -47,4 +47,5 @@ ext {
     junitVersion = '4.12'
     materialVersion = '1.2.0-alpha05'
     navigationVersion = '2.2.1'
+    roomVersion = '2.2.5'
 }

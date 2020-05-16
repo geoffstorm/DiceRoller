@@ -12,4 +12,8 @@
     <string name="label_add_constant">Additional Constant:</string>
     <string name="button_roll_dice">Roll Dice</string>
     <string name="roll_total">Total: %d</string>
+
+    <!-- History Fragment -->
+    <string name="content_description_expand_collapse">Expand Collapse</string>
+    <string name="empty_roll_history">There\'s no history to display</string>
 </resources>
